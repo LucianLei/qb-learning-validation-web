@@ -306,11 +306,11 @@ app.addEventListener("submit",async e=>{
 });
 function showShortcutReturn(payload) {
   const encoded = JSON.stringify(payload);
-  const callback = "shortcuts://run-shortcut?name="+encodeURIComponent(shortcutName)+"&input=clipboard";
-  app.innerHTML = hero("验收已完成","把本次结果交给快捷指令，自动写入共享 Numbers。")+
+  const callback = "shortcuts://run-shortcut?name="+encodeURIComponent(shortcutName)+"&input=text&text="+encodeURIComponent(encoded);
+  app.innerHTML = hero("验收结果待写入","点击下方按钮，将本次结果交给快捷指令。")+
     '<section class="section pane"><span class="pill good">'+esc(payload.status)+'</span><h2 class="section">'+esc(payload.learner)+' · '+esc(payload.moduleName)+'</h2>'+ 
     '<div class="stats"><div class="stat"><b>'+payload.total+' / 9</b>模块总分</div><div class="stat"><b>'+esc(payload.reviewer)+'</b>验收导师</div></div>'+ 
-    '<label>结果代码<textarea id="resultCode" readonly rows="5"></textarea></label><div class="actions"><button type="button" class="secondary" id="copyResult">复制代码</button><a class="primary" id="returnToShortcut" href="'+esc(callback)+'" onclick="var t=document.getElementById(&quot;resultCode&quot;);t.select();document.execCommand(&quot;copy&quot;)" style="text-decoration:none">返回快捷指令并写入 Numbers</a></div>'+ 
+    '<label>结果代码<textarea id="resultCode" readonly rows="5"></textarea></label><div class="actions"><button type="button" class="secondary" id="copyResult">复制代码</button><a class="primary" id="returnToShortcut" href="'+esc(callback)+'" style="text-decoration:none">返回快捷指令并写入 Numbers</a></div>'+ 
     '<output class="notice" id="returnNotice" aria-live="polite">点“返回快捷指令”后，快捷指令会把这一行追加到共享表格。</output></section>';
   document.querySelector("#resultCode").value = encoded;
   document.querySelector("#copyResult").addEventListener("click",async()=>{
