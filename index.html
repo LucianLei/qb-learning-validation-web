@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="zh-CN" data-mode="shortcut">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#eff1ec">
+<title>QB 学习验收</title>
+<style>
+:root{color-scheme:light;--ink:#1c2922;--muted:#53655b;--green:#18392b;--line:#dce4dc;--white:#fff;--paper:#eff1ec;--accent:#d9efb1;--radius:22px;font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--paper);line-height:1.55}button,textarea,select,input{font:inherit}button{cursor:pointer}button:disabled{cursor:default;opacity:.52}button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #537a44;outline-offset:3px}button{color:inherit}a{color:inherit}
+.shell{max-width:1152px;margin:auto;padding:0 32px}.top{background:#fff;border-bottom:1px solid var(--line)}.bar{display:flex;min-height:72px;justify-content:space-between;align-items:center;gap:20px}.brand{display:flex;gap:11px;align-items:center;font-weight:750;white-space:nowrap}.mark{background:var(--green);color:var(--accent);display:grid;place-items:center;width:36px;height:36px;border-radius:11px;font-size:13px;letter-spacing:.025em}.tabs{display:flex;gap:4px;background:var(--paper);padding:4px;border-radius:12px}.tab{border:0;background:transparent;padding:8px 15px;border-radius:8px;white-space:nowrap;font-size:14px}.tab[aria-current="page"]{background:#fff;font-weight:700;box-shadow:0 1px 4px #17392b19}.account{font-size:13px;color:var(--muted);text-align:right;max-width:205px;overflow-wrap:anywhere}.account:empty{display:none}
+main{padding-top:36px!important;padding-bottom:60px!important}.hero{background:radial-gradient(ellipse at top right,#3d6042 0%,transparent 55%),var(--green);color:#fff;border-radius:27px;padding:36px 38px;display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:190px}.hero h1{margin:0 0 7px;font-size:clamp(32px,5vw,47px);letter-spacing:-.055em;line-height:1.16}.hero p{margin:0;color:#e7eee6;font-size:15px}.hero-tags{display:flex;gap:9px;flex-wrap:wrap}.hero-tags span{color:var(--accent);padding:8px 12px;border:1px solid #ffffff45;border-radius:99px;font-size:13px;white-space:nowrap}
+h2{font-size:22px;letter-spacing:-.023em;margin:0 0 14px}h3{font-size:17px;margin:0}.section{margin-top:28px}.sub{color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card,.pane{background:#fff;border:1px solid var(--line);border-radius:var(--radius)}.pane{padding:22px}.module{padding:17px 18px;text-align:left;width:100%;min-height:103px;display:flex;align-items:flex-start;gap:13px;transition:border-color .15s,background .15s}.module:hover{border-color:#7c9a85}.module[aria-pressed="true"]{background:#e8f0e4;border:1px solid #547d59;box-shadow:inset 0 0 0 1px #547d59}.module strong{display:block;font-size:18px;word-break:break-word}.module .arrow{margin-left:auto;color:var(--muted);font-size:19px}.token{background:#e9efe5;color:#335641;border-radius:11px;display:grid;place-items:center;flex:none;width:34px;height:34px;font:700 13px system-ui}.module[aria-pressed="true"] .token{background:var(--green);color:var(--accent)}.form-head{display:flex;gap:16px;align-items:end;justify-content:space-between;flex-wrap:wrap}.form-head h2{margin:0}.form-head label{min-width:min(100%,240px)}
+label,.label{display:block;font-size:14px;font-weight:650}select,input,textarea{display:block;width:100%;min-width:0;margin-top:6px;border:1px solid #b9c9be;border-radius:11px;background:#fff;padding:10px 12px;color:var(--ink);font-size:16px}textarea{resize:vertical;min-height:88px}
+.criteria{display:grid;gap:10px;margin:17px 0;color:var(--muted);padding-left:1.25em;font-size:14px}.criteria li::marker{color:#55775d}.item{border:1px solid var(--line);border-radius:17px;padding:17px;margin:12px 0}.item-title{display:flex;align-items:center;gap:11px}.ratings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.rating{border:1px solid var(--line);background:#f7f9f6;border-radius:10px;min-height:47px;padding:6px 3px;font-size:13px}.rating[aria-pressed="true"]{background:#dfeecf;border-color:#55775d;color:#1c3928;font-weight:750}.rating span{display:block;font-size:11px}.actions{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:18px;flex-wrap:wrap}.primary,.secondary{border:1px solid transparent;border-radius:11px;font-weight:700;padding:10px 16px}.primary{background:var(--green);color:#fff}.primary:hover:enabled{background:#29533e}.secondary{background:#fff;border-color:#a9bbad}.secondary:hover{background:#edf4eb}.notice{display:block;margin-top:13px;color:var(--muted);font-size:14px}.notice:empty{display:none}.error{color:#983930}.notice a{font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:18px 0}.stat{padding:14px;border:1px solid var(--line);border-radius:13px;background:#f8faf7;font-size:13px;color:var(--muted)}.stat b{font-size:25px;color:var(--ink);display:block;font-variant-numeric:tabular-nums}.dashboard-grid{display:grid;grid-template-columns:minmax(235px,.7fr) minmax(0,1.8fr);gap:15px;align-items:start}.roster{display:grid;gap:7px;margin-top:14px}.person{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0;width:100%;background:#f6f8f4;text-align:left;border:1px solid transparent;border-radius:10px;padding:10px}.person[aria-pressed="true"]{border-color:#64866b;background:#e7efe3}.person b,.muteline{overflow-wrap:anywhere}.person .sub{white-space:nowrap}.person:first-child{margin-top:0}
+details{border:1px solid var(--line);border-radius:13px;margin:8px 0;background:#fff}summary{cursor:pointer;list-style:none;padding:13px;display:flex;align-items:center;justify-content:space-between;gap:8px}summary::-webkit-details-marker{display:none}summary::after{content:"＋";color:var(--muted);margin-left:2px}details[open]>summary::after{content:"−"}summary .push{margin-left:auto}.detail{padding:0 13px 13px}.pill{display:inline-block;padding:4px 8px;background:#edf0ec;border-radius:99px;color:#46574c;font-size:12px;white-space:nowrap}.pill.good{background:#deedce;color:#254c35}.pill.help{background:#ffebcb;color:#67440a}.result-line{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding:8px 0;font-size:14px}.note{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;margin:7px 0}.meta{color:var(--muted);font-size:13px;overflow-wrap:anywhere}.history{margin-top:13px}.history article{border-top:1px solid var(--line);padding:10px 0}.sample{display:inline-block;margin-bottom:16px;border-radius:8px;padding:5px 9px;background:#fff4d9;color:#603d09;font-size:13px}.empty{padding:15px 0;color:var(--muted);font-size:14px}.inline-form{display:flex;align-items:end;gap:8px;margin-top:12px}.inline-form label{flex:1;min-width:0}.visually-hidden{position:absolute;clip:rect(0,0,0,0);clip-path:inset(50%);width:1px;height:1px;overflow:hidden;white-space:nowrap}
+@media(max-width:740px){.shell{padding:0 19px}.bar{gap:8px;min-height:64px}.account{display:none}.hero{padding:24px;min-height:0;align-items:flex-start;flex-direction:column;gap:17px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}main{padding-top:20px!important}.dashboard-grid{grid-template-columns:1fr}.pane{padding:16px}.token{width:28px;height:28px}.module{padding:13px 11px;gap:8px;min-height:87px}.module strong{font-size:15px}.module .arrow{display:none}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.item{padding:12px}.tab{padding:7px 10px}.criteria{margin-top:12px}.section{margin-top:22px}}
+@media(max-width:380px){.shell{padding:0 13px}.brand{gap:6px;font-size:14px}.mark{width:30px;height:30px}.module .sub{font-size:11px}summary{flex-wrap:wrap}.rating{font-size:12px}.hero-tags span{padding:5px 8px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="shell bar">
+<div class="brand"><span class="mark" aria-hidden="true">QB</span>学习验收</div>
+<nav class="tabs" aria-label="主导航"><button class="tab" id="reviewTab" type="button">导师验收</button><button class="tab" id="adminTab" type="button" hidden>管理后台</button></nav>
+<span class="account" id="account"></span>
+<button type="button" class="secondary" id="signOut" hidden>退出</button>
+</div></header>
+<main class="shell" id="app"></main>
+<script>
+"use strict";
+let catalog = [{"id":1,"name":"PZOP/Demo","area":"现场演示","items":[["现场演示与硬件准备","熟练完成 Mic 的配对、调试与规范佩戴。","遵循 Live Demo 标准流程与互动规范，高质量完成现场产品演示。","运用 Show Feature，结合真实场景展示产品特性与实际价值。"],["报价查询与队列管理","运用价格 App 提供产品报价与 Trade In 折抵换购预估。","准确创建 ISR，备注顾客核心需求、意向产品及沟通背景。"],["商务探寻与一对多能力","识别潜在企业客户，主动探询并通过 Concierge 录入高质量 Business Leads。","统筹现场状况，在高峰期高效开展一对多接待。"]]},{"id":2,"name":"Ave/Watch","area":"个性化体验","items":[["个性化连接与试戴体验","运用 C&P 工具探询顾客需求，定制个性化产品方案。","协助顾客试戴 AirPods，体验主动降噪、空间音频等核心功能。","查询 Apple Watch 定制表带库存并进行实物搭配演示。","能够开展一对多服务。"],["专项政策与库存查询","准确解读 Apple Watch 相关的国家补贴与教育优惠购买规则及限制。","实时查询国家补贴专项库存。"],["ISR 与商务","规范创建 ISR 并记录完整的顾客需求。","在接待中自然融入商务探询，通过系统建立 Business Leads。"]]},{"id":3,"name":"Ave/Right","area":"配件与退货","items":[["个性化配件方案与商务拓展","运用 C&P 工具挖掘顾客需求，提供契合的配件解决方案。","在配件服务中开展商务探询，规范建立 Business Leads。"],["屏幕保护膜专业安装","按标准流程操作贴膜设备与工具，快速、精准、无尘地完成安装与品质检查。"],["快速退货全流程处理","处理 Apple Trade In 折抵关联退货，包括银行转账退款。","处理 APU 订单退货。","处理 IDL 订单退货。","处理常规退货。"]]},{"id":4,"name":"Sales 1","area":"销售与结账","items":[["完整解决方案","将 C&P 工具用于接待全流程。","结合顾客场景推荐原装与精选第三方配件，说明使用价值。","准确传递 AppleCare+ 核心保障权益与省心价值，主动推荐搭配购买。"],["专项结账","完成国家补贴资格核验与专属结账。","完成教育优惠资格核验与专属结账。","独立、准确地完成店内 Apple Trade In 折抵换购。"],["后续服务衔接","掌握 Bumblebee 流程。","根据数据迁移需求，使用 Concierge 为顾客创建 Setup 预约。"]]},{"id":5,"name":"APU","area":"取货与搭配","items":[["APU 订单流程","掌握 APU 取货政策，准确核验订单信息、取货凭证及有效身份证件。","熟练操作 APU 取货系统，确保订单正确完成。"],["APU 搭配配件与 AC","运用 C&P 工具展开对话。","在取货过程中推荐配件搭配。","在取货过程中推荐 AppleCare 搭配。"],["APU 退货","独立完成 APU 订单的现场退货流程。"]]},{"id":6,"name":"Setup","area":"设备设置与迁移","items":[["设备激活与账户配置","完成新设备开箱与基础激活配置。","掌握 Apple 账户的多种创建、验证与安全设置方式。","指导并协助顾客开通 Apple Watch 蜂窝网络。"],["整机迁移与单导","熟练执行整机数据迁移及店内 Drop-in 操作。","掌握 iPhone 单独传输照片、通讯录及微信聊天记录的方式。","掌握安卓至 iPhone 传输照片、通讯录及微信聊天记录的方式。"],["服务流程","高效开展一对多服务，合理安排多位顾客的操作节点与等待预期。","引导顾客确认资料，必要时协助抹除旧机数据。"]]}];
+const labels = {3:"熟练掌握",2:"基本达标",1:"仍需辅导"};
+const english = {3:"Talented",2:"Skilled",1:"Less Skilled"};
+const app = document.querySelector("#app");
+const reviewTab = document.querySelector("#reviewTab");
+const adminTab = document.querySelector("#adminTab");
+const demo = document.documentElement.dataset.mode === "demo";
+const feishu = document.documentElement.dataset.mode === "feishu";
+const shortcutMode = document.documentElement.dataset.mode === "shortcut";
+const shortcutName = new URLSearchParams(location.search).get("shortcut") || "QB 学习验收";
+const signOut = document.querySelector("#signOut");
+const demoKey = "qb-validation-offline-v1";
+const sample = {admin:true,reviewer:"演示导师",learners:[{id:"sample-1",name:"示例同事 A"},{id:"sample-2",name:"示例同事 B"}],reviews:[
+  {id:"sample-r2",learner:"sample-1",module:2,scores:[3,2,1],note:"下次跟进 ISR 备注和商务探询。",reviewer:"演示导师",date:"2026-11-14T04:00:00Z"},
+  {id:"sample-r1",learner:"sample-1",module:1,scores:[3,3,3],note:"演示流程完整。",reviewer:"演示导师",date:"2026-11-13T04:00:00Z"}
+]};
+let data, view = "review", moduleId = 1, learnerId = "", detailId = "", filter = "", notice = "", noticeError = false, pending = false;
+const drafts = new Map();
+function localId() {
+  if (crypto.randomUUID) return crypto.randomUUID();
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  bytes[6] = (bytes[6] & 15) | 64;
+  bytes[8] = (bytes[8] & 63) | 128;
+  return Array.from(bytes, x=>x.toString(16).padStart(2,"0")).join("").replace(/^(........)(....)(....)(....)/,"$1-$2-$3-$4-");
+}
+const esc = (x = "") => String(x).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+const moduleOf = id => catalog.find(m => m.id === id);
+const draft = () => {
+  const key = learnerId + ":" + moduleId;
+  if (!drafts.has(key)) drafts.set(key,{scores:[0,0,0],note:"",request:null});
+  return drafts.get(key);
+};
+const status = scores => scores.includes(1) ? "需针对性辅导" : scores.every(n => n === 3) ? "优秀通关" : "合格通关";
+const total = scores => scores.reduce((a,b) => a+b,0);
+const date = t => new Intl.DateTimeFormat("zh-CN",{dateStyle:"medium",timeStyle:"short",timeZone:"Asia/Shanghai"}).format(new Date(t));
+const pill = row => row ? '<span class="pill '+(row.scores.includes(1)?"help":"good")+'">'+status(row.scores)+'</span>' : '<span class="pill">未验收</span>';
+const count = id => {
+  const latest = catalog.map(m => data.reviews.find(r => r.learner === id && r.module === m.id)).filter(Boolean);
+  return {reviewed:latest.length,passed:latest.filter(r => !r.scores.includes(1)).length,help:latest.filter(r => r.scores.includes(1)).length,items:latest.reduce((n,r) => n+r.scores.filter(s => s >= 2).length,0)};
+};
+function hero(title, desc) {
+  return (demo ? '<span class="sample">离线演示 · 示例记录仅保存在当前浏览器</span>' : '')+
+    '<section class="hero"><div><h1>'+title+'</h1><p>'+desc+'</p></div>'+
+    '<div class="hero-tags"><span>6 个模块</span><span>18 个验收细项</span></div></section>';
+}
+function message() {
+  return '<output class="notice '+(noticeError?"error":"")+'" id="notice" aria-live="polite">'+esc(notice)+'</output>';
+}
+function showNotice(text, isError = false) {
+  notice = text;
+  noticeError = isError;
+  const output = document.querySelector("#notice");
+  if (output) {
+    output.textContent = text;
+    output.classList.toggle("error",isError);
+  }
+}
+async function request(path, payload) {
+  const response = await fetch(path,payload ? {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)} : undefined);
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) throw Object.assign(new Error(result.message || "暂时无法连接数据，请重试。"), {status:response.status});
+  return result;
+}
+async function load() {
+  if (shortcutMode) return {admin:false,reviewer:localStorage.getItem("qb-shortcut-reviewer") || "",learners:[],reviews:[]};
+  if (!demo) return request("/api/state");
+  try { return JSON.parse(localStorage.getItem(demoKey)) || structuredClone(sample); }
+  catch { return structuredClone(sample); }
+}
+function saveLocal(candidate) {
+  try { localStorage.setItem(demoKey,JSON.stringify(candidate)); }
+  catch { throw new Error("浏览器当前无法保存记录。"); }
+  data = candidate;
+}
+function renderReview() {
+  const m = moduleOf(moduleId);
+  const d = draft();
+  const options = data.learners.map(p => '<option value="'+esc(p.id)+'" '+(p.id === learnerId?"selected":"")+'>'+esc(feishu ? p.name+" · "+p.id : p.name)+'</option>').join("");
+  const learnerField = shortcutMode
+    ? '<label>新同事姓名<input id="learnerName" maxlength="60" autocomplete="name" placeholder="输入新同事姓名" value="'+esc(learnerId)+'" required></label>'
+    : '<label>新同事<select id="learner"><option value="">请选择同事</option>'+options+'</select></label>';
+  app.innerHTML = hero("学习验收","选模块，按可观察行为评分，记录下一步辅导。")+
+    '<section class="section"><h2>选择验收模块</h2><div class="grid">'+catalog.map(mod =>
+      '<button type="button" class="card module" data-module="'+mod.id+'" aria-pressed="'+(mod.id === moduleId)+'"><span class="token">'+String(mod.id).padStart(2,"0")+'</span><span><strong>'+mod.name+'</strong><span class="sub">'+mod.area+'</span></span><span class="arrow" aria-hidden="true">↗</span></button>').join("")+
+    '</div></section><section class="section pane" id="scorePanel"><div class="form-head"><div><span class="sub">'+m.area+'</span><h2>'+m.name+'</h2></div>'+learnerField+'</div>'+
+    (shortcutMode ? '<label class="section">验收导师<input id="reviewerName" maxlength="60" autocomplete="name" placeholder="输入你的姓名" value="'+esc(data.reviewer)+'" required></label>' : '')+
+    (!shortcutMode && !options ? '<div class="empty">'+(data.admin?'请先在管理后台添加新同事。':'名册暂无新同事，请联系管理员。')+'</div>' : '')+
+    '<form id="reviewForm">'+m.items.map(([name,...criteria],i) =>
+      '<section class="item"><div class="item-title"><span class="token">'+m.id+'.'+(i+1)+'</span><h3 id="item-'+i+'">'+name+'</h3></div><ul class="criteria">'+criteria.map(c=>'<li>'+c+'</li>').join("")+'</ul><div class="ratings" role="group" aria-labelledby="item-'+i+'">'+[3,2,1].map(n =>
+      '<button class="rating" type="button" data-item="'+i+'" data-score="'+n+'" aria-label="'+labels[n]+'，'+n+' 分" aria-pressed="'+(d.scores[i] === n)+'">'+labels[n]+'<span>'+n+' 分 · '+english[n]+'</span></button>').join("")+'</div></section>').join("")+
+    '<label>辅导备注 <span class="sub">可选</span><textarea id="note" maxlength="1000" placeholder="记录做得好的地方，或下次复验要观察的行为">'+esc(d.note)+'</textarea></label>'+
+    '<div class="actions"><span class="sub" id="progress" aria-live="polite"></span><button type="submit" class="primary" id="submitReview">提交验收</button></div>'+message()+'</form></section>';
+  updateReview();
+}
+function updateReview() {
+  const {scores} = draft();
+  const rated = scores.filter(Boolean).length;
+  document.querySelector("#progress").textContent = rated === 3 ? total(scores)+" / 9 分 · "+status(scores) : "已评分 "+rated+" / 3 项";
+  document.querySelector("#submitReview").disabled = pending || !learnerId || rated !== 3;
+}
+function historyItem(row) {
+  const m = moduleOf(row.module);
+  const weak = m.items.filter((_,i) => row.scores[i] === 1).map(i => i[0]);
+  return '<article><div class="meta">'+date(row.date)+' · '+esc(row.reviewer)+'</div>'+
+    row.scores.map((n,i) => '<div class="result-line"><span>'+m.id+'.'+(i+1)+' '+m.items[i][0]+'</span><strong>'+n+' 分 · '+labels[n]+'</strong></div>').join("")+
+    (weak.length ? '<p class="note"><strong>待加强</strong> '+weak.join('、')+'</p>' : '')+
+    (row.note ? '<p class="note"><strong>导师备注</strong> '+esc(row.note)+'</p>' : '')+'</article>';
+}
+function personList() {
+  const people = data.learners.filter(p => p.name.toLowerCase().includes(filter.trim().toLowerCase()));
+  return people.map(p => '<button type="button" class="person" data-person="'+esc(p.id)+'" aria-pressed="'+(p.id===detailId)+'"><b>'+esc(p.name)+'</b><span class="sub">'+count(p.id).passed+' / 6 通关</span></button>').join("") ||
+    '<div class="empty">'+(data.learners.length ? "没有匹配的同事。" : "添加第一位新同事后即可开始验收。")+'</div>';
+}
+function renderAdmin() {
+  if (!data.learners.some(p => p.id === detailId)) detailId = data.learners[0]?.id || "";
+  const person = data.learners.find(p=>p.id===detailId);
+  const numbers = count(detailId);
+  const details = person ? catalog.map(m => {
+    const rows = data.reviews.filter(r=>r.learner===detailId && r.module===m.id);
+    const latest = rows[0];
+    return '<details><summary><strong>'+m.name+'</strong>'+pill(latest)+'<span class="sub push">'+(latest?total(latest.scores)+' / 9 分':'—')+'</span></summary><div class="detail">'+
+      (latest ? historyItem(latest) : '<div class="empty">'+m.items.map((item,i)=>'<div class="result-line"><span>'+m.id+'.'+(i+1)+' '+item[0]+'</span><span>未验收</span></div>').join('')+'</div>')+
+      (rows.length>1?'<div class="history"><h3>历史验收</h3>'+rows.slice(1).map(r=>'<div class="meta">'+pill(r)+' '+total(r.scores)+' / 9 分</div>'+historyItem(r)).join("")+'</div>':'')+'</div></details>';
+  }).join("") : '<div class="empty">名册中有同事后，这里会显示 6 个模块的验收明细。</div>';
+  app.innerHTML = hero("学习进度","查看每位新同事的通关情况、辅导项和复验记录。")+
+    '<div class="section dashboard-grid"><aside class="pane"><h2>新同事名册</h2><label class="visually-hidden" for="filter">搜索姓名</label><input type="search" id="filter" placeholder="搜索姓名" value="'+esc(filter)+'"><div class="roster" id="roster">'+personList()+'</div>'+
+    '<form class="inline-form" id="addForm"><label>新增同事<input id="newName" maxlength="60" required placeholder="输入姓名"></label><button type="submit" class="secondary">添加</button></form>'+message()+'</aside>'+
+    '<section class="pane"><h2 class="muteline">'+(person?esc(person.name):"个人明细")+'</h2>'+
+    '<div class="stats"><div class="stat"><b>'+numbers.reviewed+'/6</b>已验收模块</div><div class="stat"><b>'+numbers.passed+'/6</b>已通关模块</div><div class="stat"><b>'+numbers.help+'</b>待辅导模块</div><div class="stat"><b>'+numbers.items+'/18</b>已达标细项</div></div>'+details+'</section></div>';
+}
+function render() {
+  if (!data) return;
+  if (!data.admin) view = "review";
+  adminTab.hidden = !data.admin;
+  signOut.hidden = !feishu;
+  document.querySelector("#account").textContent = data.reviewer;
+  reviewTab.setAttribute("aria-current",view === "review" ? "page" : "false");
+  adminTab.setAttribute("aria-current",view === "admin" ? "page" : "false");
+  if (view === "review") renderReview(); else renderAdmin();
+}
+function navigate(next) {
+  if (pending) return;
+  view = next;
+  notice = "";
+  noticeError = false;
+  render();
+}
+reviewTab.addEventListener("click",()=>navigate("review"));
+adminTab.addEventListener("click",()=>navigate("admin"));
+app.addEventListener("click",e=>{
+  if (pending) return;
+  const button = e.target.closest("button");
+  if (!button) return;
+  if (button.dataset.module) {
+    moduleId = Number(button.dataset.module);
+    showNotice("");
+    renderReview();
+    document.querySelector('[data-module="'+moduleId+'"]').focus({preventScroll:true});
+  } else if (button.dataset.score) {
+    const d = draft();
+    d.scores[Number(button.dataset.item)] = Number(button.dataset.score);
+    d.request = null;
+    showNotice("");
+    button.parentElement.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b===button));
+    updateReview();
+  } else if (button.dataset.person) {
+    detailId = button.dataset.person;
+    renderAdmin();
+    Array.from(document.querySelectorAll("[data-person]")).find(b=>b.dataset.person===detailId)?.focus({preventScroll:true});
+  }
+});
+app.addEventListener("change",e=>{
+  if(e.target.id === "learner") {
+    learnerId = e.target.value;
+    showNotice("");
+    renderReview();
+    document.querySelector("#learner").focus({preventScroll:true});
+  }
+});
+app.addEventListener("input",e=>{
+  if(e.target.id === "note") {
+    draft().note = e.target.value;
+    draft().request = null;
+  } else if(e.target.id === "learnerName") {
+    learnerId = e.target.value.trim();
+    draft().request = null;
+    updateReview();
+  } else if(e.target.id === "reviewerName") {
+    data.reviewer = e.target.value;
+    localStorage.setItem("qb-shortcut-reviewer",data.reviewer);
+  } else if (e.target.id === "filter") {
+    filter = e.target.value;
+    document.querySelector("#roster").innerHTML = personList();
+  }
+});
+app.addEventListener("submit",async e=>{
+  e.preventDefault();
+  if (pending) return;
+  if (e.target.id === "mentorLogin") return loginMentor(e.target);
+  const isReview = e.target.id === "reviewForm";
+  if (isReview && (!learnerId || draft().scores.some(n=>!n))) return;
+  const name = isReview ? "" : document.querySelector("#newName").value.trim();
+  if (!isReview && !name) return showNotice("请输入姓名。",true);
+  pending = true;
+  const form = e.target;
+  const fields = [...form.elements,...document.querySelectorAll("#learner")].filter(el=>!el.disabled);
+  fields.forEach(el=>el.disabled=true);
+  showNotice("正在保存…");
+  try {
+    if (isReview) {
+      const d = draft();
+      if (shortcutMode) {
+        const section = moduleOf(moduleId);
+        const submissionId = localId();
+        const submittedAt = new Date().toISOString();
+        const reviewer = document.querySelector("#reviewerName").value.trim();
+        const learner = document.querySelector("#learnerName").value.trim();
+        const scoreTotal = total(d.scores);
+        const resultStatus = status(d.scores);
+        const note = d.note.trim();
+        const itemNames = section.items.map(item=>item[0]);
+        const payload = {
+          version:1,
+          submissionId,
+          submittedAt,
+          reviewer,
+          learner,
+          moduleId:section.id,
+          moduleName:section.name,
+          itemNames,
+          scores:[...d.scores],
+          total:scoreTotal,
+          status:resultStatus,
+          note,
+          row:[submissionId,submittedAt,reviewer,learner,section.id,section.name,itemNames[0],d.scores[0],itemNames[1],d.scores[1],itemNames[2],d.scores[2],scoreTotal,resultStatus,note]
+        };
+        if (!payload.reviewer || !payload.learner) throw new Error("请填写验收导师和新同事姓名。");
+        pending = false;
+        showShortcutReturn(payload);
+        return;
+      }
+      d.request ??= {id:localId(),learner:learnerId,module:moduleId,scores:[...d.scores],note:d.note.trim()};
+      if (demo) {
+        const record = {...d.request,date:new Date().toISOString(),reviewer:data.reviewer};
+        saveLocal({...data,reviews:[record,...data.reviews]});
+      } else {
+        await request("/api/reviews",d.request);
+      }
+      const result = "已提交 · "+total(d.scores)+" / 9 分 · "+status(d.scores);
+      drafts.delete(learnerId+":"+moduleId);
+      if (!feishu) { try { data = await load(); } catch {} }
+      showNotice(result);
+    } else {
+      const person = {id:localId(),name};
+      if (demo) saveLocal({...data,learners:[...data.learners,person]});
+      else {
+        await request("/api/learners",person);
+        data = {...data,learners:[...data.learners,person]};
+        try { data = await load(); } catch {}
+      }
+      detailId = person.id;
+      filter = "";
+      showNotice("已添加 "+name);
+    }
+    pending = false;
+    render();
+    document.querySelector("#notice")?.scrollIntoView({block:"nearest"});
+  } catch(error) {
+    pending = false;
+    fields.forEach(el=>el.disabled=false);
+    if (feishu && error.status === 401) return showLogin();
+    showNotice(error.message || "保存失败，请重试。",true);
+    if (isReview) updateReview();
+  }
+});
+function showShortcutReturn(payload) {
+  const encoded = JSON.stringify(payload);
+  const callback = "shortcuts://run-shortcut?name="+encodeURIComponent(shortcutName)+"&input=text&text="+encodeURIComponent(encoded);
+  app.innerHTML = hero("验收已完成","把本次结果交给快捷指令，自动写入共享 Numbers。")+
+    '<section class="section pane"><span class="pill good">'+esc(payload.status)+'</span><h2 class="section">'+esc(payload.learner)+' · '+esc(payload.moduleName)+'</h2>'+ 
+    '<div class="stats"><div class="stat"><b>'+payload.total+' / 9</b>模块总分</div><div class="stat"><b>'+esc(payload.reviewer)+'</b>验收导师</div></div>'+ 
+    '<label>结果代码<textarea id="resultCode" readonly rows="5"></textarea></label><div class="actions"><button type="button" class="secondary" id="copyResult">复制代码</button><a class="primary" id="returnToShortcut" href="'+esc(callback)+'" style="text-decoration:none">返回快捷指令并写入 Numbers</a></div>'+ 
+    '<output class="notice" id="returnNotice" aria-live="polite">点“返回快捷指令”后，快捷指令会把这一行追加到共享表格。</output></section>';
+  document.querySelector("#resultCode").value = encoded;
+  document.querySelector("#copyResult").addEventListener("click",async()=>{
+    try { await navigator.clipboard.writeText(encoded); document.querySelector("#returnNotice").textContent="已复制结果代码。"; }
+    catch { document.querySelector("#resultCode").select(); document.execCommand("copy"); document.querySelector("#returnNotice").textContent="已复制结果代码。"; }
+  });
+}
+async function start() {
+  app.innerHTML=hero("学习验收","正在加载验收数据…");
+  try {
+    const loaded = await load();
+    if (feishu) catalog = loaded.catalog;
+    if (feishu && data && data.reviewer !== loaded.reviewer) {
+      drafts.clear();
+      learnerId = "";
+    }
+    data = loaded;
+    render();
+  }
+  catch(error) {
+    if (feishu && error.status === 401) return showLogin();
+    const note = document.createElement("p");
+    note.className = "notice error";
+    note.textContent = error.message;
+    const retry = document.createElement("button");
+    retry.textContent = "重试";
+    retry.className = "secondary";
+    retry.onclick = start;
+    app.append(note,retry);
+  }
+}
+function showLogin() {
+  signOut.hidden = true;
+  document.querySelector("#account").textContent = "";
+  app.innerHTML = hero("学习验收","输入管理员发给你的导师访问码。")+
+    '<section class="section pane"><form id="mentorLogin"><label>导师访问码<input name="code" maxlength="128" type="password" autocomplete="current-password" required></label><div class="actions"><button class="primary" type="submit">进入验收</button></div><output class="notice error" id="loginNotice" aria-live="polite"></output></form></section>';
+}
+async function loginMentor(form) {
+  pending = true;
+  form.querySelector("button").disabled = true;
+  try {
+    await request("/api/session", {code:form.elements.code.value.trim()});
+    await start();
+  } catch(error) {
+    document.querySelector("#loginNotice").textContent = error.message || "登录失败，请重试。";
+    form.querySelector("button").disabled = false;
+  } finally {
+    pending = false;
+    if (document.querySelector("#reviewForm")) updateReview();
+  }
+}
+signOut.addEventListener("click",async()=>{
+  if (pending) return;
+  try { await request("/api/signout",{}); }
+  catch(error) { return showNotice(error.message,true); }
+  data = undefined;
+  catalog = [];
+  drafts.clear();
+  learnerId = "";
+  notice = "";
+  showLogin();
+});
+start();
+</script>
+</body>
+</html>
