@@ -17,6 +17,9 @@ label,.label{display:block;font-size:14px;font-weight:650}select,input,textarea{
 details{border:1px solid var(--line);border-radius:13px;margin:8px 0;background:#fff}summary{cursor:pointer;list-style:none;padding:13px;display:flex;align-items:center;justify-content:space-between;gap:8px}summary::-webkit-details-marker{display:none}summary::after{content:"＋";color:var(--muted);margin-left:2px}details[open]>summary::after{content:"−"}summary .push{margin-left:auto}.detail{padding:0 13px 13px}.pill{display:inline-block;padding:4px 8px;background:#f0f0f3;border-radius:99px;color:#48484e;font-size:12px;white-space:nowrap}.pill.good{background:#e8f5eb;color:#235b34}.pill.help{background:#fff1dc;color:#704702}.result-line{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding:8px 0;font-size:14px}.note{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;margin:7px 0}.meta{color:var(--muted);font-size:13px;overflow-wrap:anywhere}.history{margin-top:13px}.history article{border-top:1px solid var(--line);padding:10px 0}.sample{display:inline-block;margin-bottom:16px;border-radius:8px;padding:5px 9px;background:#fff4d9;color:#603d09;font-size:13px}.empty{padding:15px 0;color:var(--muted);font-size:14px}.inline-form{display:flex;align-items:end;gap:8px;margin-top:12px}.inline-form label{flex:1;min-width:0}.visually-hidden{position:absolute;clip:rect(0,0,0,0);clip-path:inset(50%);width:1px;height:1px;overflow:hidden;white-space:nowrap}
 @media(max-width:740px){.shell{padding:0 19px}.bar{gap:8px;min-height:64px}.account{display:none}.hero{padding:24px;min-height:0;align-items:flex-start;flex-direction:column;gap:17px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}main{padding-top:20px!important}.dashboard-grid{grid-template-columns:1fr}.pane{padding:16px}.token{width:28px;height:28px}.module{padding:13px 11px;gap:8px;min-height:87px}.module strong{font-size:15px}.module .arrow{display:none}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.item{padding:12px}.tab{padding:7px 10px}.criteria{margin-top:12px}.section{margin-top:22px}}
 @media(max-width:380px){.shell{padding:0 13px}.brand{gap:6px;font-size:14px}.mark{width:30px;height:30px}.module .sub{font-size:11px}summary{flex-wrap:wrap}.rating{font-size:12px}.hero-tags span{padding:5px 8px}}
+button,a.primary{touch-action:manipulation}
+#returnPanel .actions{justify-content:flex-start}
+#returnPanel a.primary{text-decoration:none;text-align:center}
 </style>
 </head>
 <body>
@@ -38,7 +41,10 @@ const adminTab = document.querySelector("#adminTab");
 const demo = document.documentElement.dataset.mode === "demo";
 const feishu = document.documentElement.dataset.mode === "feishu";
 const shortcutMode = document.documentElement.dataset.mode === "shortcut";
-const shortcutName = new URLSearchParams(location.search).get("shortcut") || "QB 学习验收";
+const shortcutParams = new URLSearchParams(location.search);
+const shortcutName = shortcutParams.get("shortcut") || "QB 学习验收";
+// Set this to {version: 2, url: "..."} once the new iCloud import link is ready.
+const shortcutRelease = null;
 const signOut = document.querySelector("#signOut");
 const demoKey = "qb-validation-offline-v1";
 const sample = {admin:true,reviewer:"演示导师",learners:[{id:"sample-1",name:"示例同事 A"},{id:"sample-2",name:"示例同事 B"}],reviews:[
@@ -47,6 +53,24 @@ const sample = {admin:true,reviewer:"演示导师",learners:[{id:"sample-1",name
 ]};
 let data, view = "review", moduleId = 1, learnerId = "", detailId = "", filter = "", notice = "", noticeError = false, pending = false;
 const drafts = new Map();
+const shortcutDraftKey = "qb-validation-shortcut-draft-v1";
+let shortcutResult = null;
+function loadShortcutDraft() {
+  try { return JSON.parse(sessionStorage.getItem(shortcutDraftKey)); }
+  catch { return null; }
+}
+function saveShortcutDraft() {
+  if (!shortcutMode) return;
+  try {
+    sessionStorage.setItem(shortcutDraftKey,JSON.stringify({
+      learnerId, reviewer:data.reviewer, moduleId, drafts:[...drafts], result:shortcutResult
+    }));
+  } catch {}
+}
+function savedReviewer() {
+  try { return localStorage.getItem("qb-shortcut-reviewer") || ""; }
+  catch { return ""; }
+}
 function localId() {
   if (crypto.randomUUID) return crypto.randomUUID();
   const bytes = crypto.getRandomValues(new Uint8Array(16));
@@ -56,8 +80,9 @@ function localId() {
 }
 const esc = (x = "") => String(x).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
 const moduleOf = id => catalog.find(m => m.id === id);
+const draftKey = () => shortcutMode ? moduleId : learnerId + ":" + moduleId;
 const draft = () => {
-  const key = learnerId + ":" + moduleId;
+  const key = draftKey();
   if (!drafts.has(key)) drafts.set(key,{scores:[0,0,0],note:"",request:null});
   return drafts.get(key);
 };
@@ -93,7 +118,7 @@ async function request(path, payload) {
   return result;
 }
 async function load() {
-  if (shortcutMode) return {admin:false,reviewer:localStorage.getItem("qb-shortcut-reviewer") || "",learners:[],reviews:[]};
+  if (shortcutMode) return {admin:false,reviewer:savedReviewer(),learners:[],reviews:[]};
   if (!demo) return request("/api/state");
   try { return JSON.parse(localStorage.getItem(demoKey)) || structuredClone(sample); }
   catch { return structuredClone(sample); }
@@ -103,31 +128,45 @@ function saveLocal(candidate) {
   catch { throw new Error("浏览器当前无法保存记录。"); }
   data = candidate;
 }
+function shortcutUpdateNotice() {
+  if (!shortcutMode || !shortcutRelease) return "";
+  const current = Number(shortcutParams.get("shortcutVersion")) || 1;
+  if (current >= shortcutRelease.version) return "";
+  let link;
+  try { link = new URL(shortcutRelease.url); }
+  catch { return ""; }
+  if (link.origin !== "https://www.icloud.com" || !/^\/shortcuts\/[a-f0-9]{32}\/?$/i.test(link.pathname)) return "";
+  const text = shortcutParams.has("shortcut") || shortcutParams.has("shortcutVersion")
+    ? "新版快捷指令可用。导入时请替换同名快捷指令。"
+    : "首次使用或需要更新时，请获取最新的快捷指令。";
+  return '<aside class="section pane" aria-label="快捷指令更新">'+text+
+    ' <a class="secondary" href="'+esc(link.href)+'" target="_blank" rel="noopener noreferrer">获取 v'+esc(shortcutRelease.version)+'</a></aside>';
+}
 function renderReview() {
   const m = moduleOf(moduleId);
   const d = draft();
   const options = data.learners.map(p => '<option value="'+esc(p.id)+'" '+(p.id === learnerId?"selected":"")+'>'+esc(feishu ? p.name+" · "+p.id : p.name)+'</option>').join("");
   const learnerField = shortcutMode
-    ? '<label>新同事姓名<input id="learnerName" maxlength="60" autocomplete="name" placeholder="输入新同事姓名" value="'+esc(learnerId)+'" required></label>'
+    ? '<label>新同事姓名<input id="learnerName" form="reviewForm" maxlength="60" autocomplete="off" placeholder="输入新同事姓名" value="'+esc(learnerId)+'" required></label>'
     : '<label>新同事<select id="learner"><option value="">请选择同事</option>'+options+'</select></label>';
-  app.innerHTML = hero("学习验收","选模块，按可观察行为评分，记录下一步辅导。")+
+  app.innerHTML = hero("学习验收","选模块，按可观察行为评分，记录下一步辅导。")+shortcutUpdateNotice()+
     '<section class="section"><h2>选择验收模块</h2><div class="grid">'+catalog.map(mod =>
       '<button type="button" class="card module" data-module="'+mod.id+'" aria-pressed="'+(mod.id === moduleId)+'"><span class="token">'+String(mod.id).padStart(2,"0")+'</span><span><strong>'+mod.name+'</strong><span class="sub">'+mod.area+'</span></span><span class="arrow" aria-hidden="true">↗</span></button>').join("")+
     '</div></section><section class="section pane" id="scorePanel"><div class="form-head"><div><span class="sub">'+m.area+'</span><h2>'+m.name+'</h2></div>'+learnerField+'</div>'+
-    (shortcutMode ? '<label class="section">验收导师<input id="reviewerName" maxlength="60" autocomplete="name" placeholder="输入你的姓名" value="'+esc(data.reviewer)+'" required></label>' : '')+
+    (shortcutMode ? '<label class="section">验收导师<input id="reviewerName" form="reviewForm" maxlength="60" autocomplete="name" placeholder="输入你的姓名" value="'+esc(data.reviewer)+'" required></label>' : '')+
     (!shortcutMode && !options ? '<div class="empty">'+(data.admin?'请先在管理后台添加新同事。':'名册暂无新同事，请联系管理员。')+'</div>' : '')+
-    '<form id="reviewForm">'+m.items.map(([name,...criteria],i) =>
+    '<form id="reviewForm"'+(shortcutMode?' novalidate':'')+'>'+m.items.map(([name,...criteria],i) =>
       '<section class="item"><div class="item-title"><span class="token">'+m.id+'.'+(i+1)+'</span><h3 id="item-'+i+'">'+name+'</h3></div><ul class="criteria">'+criteria.map(c=>'<li>'+c+'</li>').join("")+'</ul><div class="ratings" role="group" aria-labelledby="item-'+i+'">'+[3,2,1].map(n =>
       '<button class="rating" type="button" data-item="'+i+'" data-score="'+n+'" aria-label="'+labels[n]+'，'+n+' 分" aria-pressed="'+(d.scores[i] === n)+'">'+labels[n]+'<span>'+n+' 分 · '+english[n]+'</span></button>').join("")+'</div></section>').join("")+
     '<label>辅导备注 <span class="sub">可选</span><textarea id="note" maxlength="1000" placeholder="记录做得好的地方，或下次复验要观察的行为">'+esc(d.note)+'</textarea></label>'+
-    '<div class="actions"><span class="sub" id="progress" aria-live="polite"></span><button type="submit" class="primary" id="submitReview">提交验收</button></div>'+message()+'</form></section>';
+    '<div class="actions"><span class="sub" id="progress" aria-live="polite"></span><button type="submit" class="primary" id="submitReview">'+(shortcutMode?'生成验收结果':'提交验收')+'</button></div>'+message()+'</form></section>';
   updateReview();
 }
 function updateReview() {
   const {scores} = draft();
   const rated = scores.filter(Boolean).length;
   document.querySelector("#progress").textContent = rated === 3 ? total(scores)+" / 9 分 · "+status(scores) : "已评分 "+rated+" / 3 项";
-  document.querySelector("#submitReview").disabled = pending || !learnerId || rated !== 3;
+  document.querySelector("#submitReview").disabled = pending || (!shortcutMode && (!learnerId || rated !== 3));
 }
 function historyItem(row) {
   const m = moduleOf(row.module);
@@ -167,7 +206,9 @@ function render() {
   document.querySelector("#account").textContent = data.reviewer;
   reviewTab.setAttribute("aria-current",view === "review" ? "page" : "false");
   adminTab.setAttribute("aria-current",view === "admin" ? "page" : "false");
-  if (view === "review") renderReview(); else renderAdmin();
+  if (view === "review" && shortcutResult) showShortcutReturn(shortcutResult);
+  else if (view === "review") renderReview();
+  else renderAdmin();
 }
 function navigate(next) {
   if (pending) return;
@@ -184,6 +225,7 @@ app.addEventListener("click",e=>{
   if (!button) return;
   if (button.dataset.module) {
     moduleId = Number(button.dataset.module);
+    saveShortcutDraft();
     showNotice("");
     renderReview();
     document.querySelector('[data-module="'+moduleId+'"]').focus({preventScroll:true});
@@ -191,6 +233,7 @@ app.addEventListener("click",e=>{
     const d = draft();
     d.scores[Number(button.dataset.item)] = Number(button.dataset.score);
     d.request = null;
+    saveShortcutDraft();
     showNotice("");
     button.parentElement.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b===button));
     updateReview();
@@ -213,22 +256,26 @@ app.addEventListener("input",e=>{
     draft().note = e.target.value;
     draft().request = null;
   } else if(e.target.id === "learnerName") {
-    learnerId = e.target.value.trim();
-    draft().request = null;
-    updateReview();
+    learnerId = e.target.value;
   } else if(e.target.id === "reviewerName") {
     data.reviewer = e.target.value;
-    localStorage.setItem("qb-shortcut-reviewer",data.reviewer);
+    try { localStorage.setItem("qb-shortcut-reviewer",data.reviewer); } catch {}
   } else if (e.target.id === "filter") {
     filter = e.target.value;
     document.querySelector("#roster").innerHTML = personList();
   }
+  if (shortcutMode && ["note","learnerName","reviewerName"].includes(e.target.id)) saveShortcutDraft();
 });
 app.addEventListener("submit",async e=>{
   e.preventDefault();
   if (pending) return;
   if (e.target.id === "mentorLogin") return loginMentor(e.target);
   const isReview = e.target.id === "reviewForm";
+  if (isReview && shortcutMode) {
+    try { prepareShortcutResult(); }
+    catch { showNotice("无法生成结果。你填写的内容仍在，请重试。",true); }
+    return;
+  }
   if (isReview && (!learnerId || draft().scores.some(n=>!n))) return;
   const name = isReview ? "" : document.querySelector("#newName").value.trim();
   if (!isReview && !name) return showNotice("请输入姓名。",true);
@@ -240,36 +287,6 @@ app.addEventListener("submit",async e=>{
   try {
     if (isReview) {
       const d = draft();
-      if (shortcutMode) {
-        const section = moduleOf(moduleId);
-        const submissionId = localId();
-        const submittedAt = new Date().toISOString();
-        const reviewer = document.querySelector("#reviewerName").value.trim();
-        const learner = document.querySelector("#learnerName").value.trim();
-        const scoreTotal = total(d.scores);
-        const resultStatus = status(d.scores);
-        const note = d.note.trim();
-        const itemNames = section.items.map(item=>item[0]);
-        const payload = {
-          version:1,
-          submissionId,
-          submittedAt,
-          reviewer,
-          learner,
-          moduleId:section.id,
-          moduleName:section.name,
-          itemNames,
-          scores:[...d.scores],
-          total:scoreTotal,
-          status:resultStatus,
-          note,
-          row:[submissionId,submittedAt,reviewer,learner,section.id,section.name,itemNames[0],d.scores[0],itemNames[1],d.scores[1],itemNames[2],d.scores[2],scoreTotal,resultStatus,note]
-        };
-        if (!payload.reviewer || !payload.learner) throw new Error("请填写验收导师和新同事姓名。");
-        pending = false;
-        showShortcutReturn(payload);
-        return;
-      }
       d.request ??= {id:localId(),learner:learnerId,module:moduleId,scores:[...d.scores],note:d.note.trim()};
       if (demo) {
         const record = {...d.request,date:new Date().toISOString(),reviewer:data.reviewer};
@@ -278,7 +295,7 @@ app.addEventListener("submit",async e=>{
         await request("/api/reviews",d.request);
       }
       const result = "已提交 · "+total(d.scores)+" / 9 分 · "+status(d.scores);
-      drafts.delete(learnerId+":"+moduleId);
+      drafts.delete(draftKey());
       if (!feishu) { try { data = await load(); } catch {} }
       showNotice(result);
     } else {
@@ -304,19 +321,110 @@ app.addEventListener("submit",async e=>{
     if (isReview) updateReview();
   }
 });
+function prepareShortcutResult() {
+  const learnerField = document.querySelector("#learnerName");
+  const reviewerField = document.querySelector("#reviewerName");
+  learnerId = learnerField.value;
+  data.reviewer = reviewerField.value;
+  const learner = learnerId.trim();
+  const reviewer = data.reviewer.trim();
+  const d = draft();
+  const unrated = d.scores.findIndex(n => !n);
+  const missing = !learner ? learnerField : !reviewer ? reviewerField :
+    unrated < 0 ? null : document.querySelector('[data-item="'+unrated+'"]');
+  if (missing) {
+    const prompt = !learner ? "请填写新同事姓名。" : !reviewer ? "请填写验收导师姓名。" : "请为第 "+(unrated+1)+" 项评分。";
+    saveShortcutDraft();
+    showNotice(prompt,true);
+    missing.focus();
+    return;
+  }
+  const section = moduleOf(moduleId);
+  const itemNames = section.items.map(item=>item[0]);
+  const scores = [...d.scores];
+  const scoreTotal = total(scores);
+  const resultStatus = status(scores);
+  d.note = document.querySelector("#note").value;
+  const note = d.note.trim();
+  const values = [reviewer,learner,section.id,section.name,itemNames[0],scores[0],itemNames[1],scores[1],itemNames[2],scores[2],scoreTotal,resultStatus,note];
+  if (!d.payload || values.some((value,i) => value !== d.payload.row[i+2])) {
+    const submissionId = localId();
+    const submittedAt = new Date().toISOString();
+    d.payload = {
+      version:1,submissionId,submittedAt,reviewer,learner,
+      moduleId:section.id,moduleName:section.name,itemNames,scores,total:scoreTotal,status:resultStatus,note,
+      row:[submissionId,submittedAt,...values]
+    };
+  }
+  notice = "";
+  shortcutResult = d.payload;
+  saveShortcutDraft();
+  showShortcutReturn(shortcutResult);
+  document.querySelector("#returnToShortcut").focus();
+}
 function showShortcutReturn(payload) {
   const encoded = JSON.stringify(payload);
-  const callback = "shortcuts://run-shortcut?name="+encodeURIComponent(shortcutName)+"&input=text&text="+encodeURIComponent(encoded);
-  app.innerHTML = hero("验收结果待写入","点击下方按钮，将本次结果交给快捷指令。")+
-    '<section class="section pane"><span class="pill good">'+esc(payload.status)+'</span><h2 class="section">'+esc(payload.learner)+' · '+esc(payload.moduleName)+'</h2>'+ 
-    '<div class="stats"><div class="stat"><b>'+payload.total+' / 9</b>模块总分</div><div class="stat"><b>'+esc(payload.reviewer)+'</b>验收导师</div></div>'+ 
-    '<label>结果代码<textarea id="resultCode" readonly rows="5"></textarea></label><div class="actions"><button type="button" class="secondary" id="copyResult">复制代码</button><a class="primary" id="returnToShortcut" href="'+esc(callback)+'" style="text-decoration:none">返回快捷指令并写入 Numbers</a></div>'+ 
-    '<output class="notice" id="returnNotice" aria-live="polite">点“返回快捷指令”后，快捷指令会把这一行追加到共享表格。</output></section>';
-  document.querySelector("#resultCode").value = encoded;
-  document.querySelector("#copyResult").addEventListener("click",async()=>{
-    try { await navigator.clipboard.writeText(encoded); document.querySelector("#returnNotice").textContent="已复制结果代码。"; }
-    catch { document.querySelector("#resultCode").select(); document.execCommand("copy"); document.querySelector("#returnNotice").textContent="已复制结果代码。"; }
-  });
+  const shortcutURL = "shortcuts://run-shortcut?name="+encodeURIComponent(shortcutName);
+  const callback = shortcutURL+"&input=text&text="+encodeURIComponent(encoded);
+  app.innerHTML = hero("验收结果待写入","由快捷指令写入共享 Numbers 表格。")+
+    '<section class="section pane" id="returnPanel"><span class="pill good">'+esc(payload.status)+'</span><h2 class="section">'+esc(payload.learner)+' · '+esc(payload.moduleName)+'</h2>'+
+    '<div class="stats"><div class="stat"><b>'+payload.total+' / 9</b>模块总分</div><div class="stat"><b>'+esc(payload.reviewer)+'</b>验收导师</div></div>'+
+    '<div class="actions"><a class="primary" id="returnToShortcut" href="'+esc(callback)+'">打开快捷指令并写入 Numbers</a></div>'+
+    '<output class="notice" id="returnNotice" aria-live="polite">请到 Numbers 确认已新增记录。重试前可用提交编号查重。</output>'+
+    '<p class="meta">提交编号 '+esc(payload.submissionId)+'</p>'+
+    '<details><summary>打不开快捷指令？试用剪贴板</summary><div class="detail"><p class="sub">复制结果后，用剪贴板内容运行快捷指令。如果当前浏览器拦截跳转，请先复制结果备份，再从 Safari 打开网页。</p>'+
+    '<label>结果代码<textarea id="resultCode" readonly rows="4"></textarea></label>'+
+    '<div class="actions"><button type="button" class="secondary" id="copyResult">复制结果代码</button><a class="primary" id="returnFromClipboard" href="'+esc(shortcutURL+"&input=clipboard")+'">从剪贴板写入 Numbers</a></div>'+
+    '<output class="notice" id="copyNotice" aria-live="polite"></output></div></details>'+
+    '<div class="actions"><button type="button" class="secondary" id="editResult">返回修改</button><button type="button" class="secondary" id="finishResult">已写入，开始下一次</button></div></section>';
+  const resultCode = document.querySelector("#resultCode");
+  resultCode.value = encoded;
+  const returnNotice = document.querySelector("#returnNotice");
+  document.querySelector("#returnToShortcut").onclick = () => {
+    returnNotice.textContent = "正在打开快捷指令。若未跳转，可展开下方的剪贴板备用方式。";
+  };
+  const copyNotice = document.querySelector("#copyNotice");
+  let copied = false;
+  document.querySelector("#copyResult").onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(encoded);
+      copied = true;
+    } catch {
+      resultCode.focus();
+      resultCode.select();
+      resultCode.setSelectionRange(0,encoded.length);
+      try { copied = document.execCommand("copy"); }
+      catch { copied = false; }
+    }
+    copyNotice.textContent = copied ? "已复制。请点击“从剪贴板写入 Numbers”。" :
+      "自动复制失败。请手动全选并复制上方结果代码。";
+  };
+  document.querySelector("#returnFromClipboard").onclick = event => {
+    if (!copied) {
+      event.preventDefault();
+      copyNotice.textContent = "请先点击“复制结果代码”。手动复制后可用下面的链接继续。";
+      const manual = document.createElement("a");
+      manual.href = event.currentTarget.href;
+      manual.textContent = "我已手动复制，打开快捷指令";
+      copyNotice.append(document.createElement("br"),manual);
+      return;
+    }
+    copyNotice.textContent = "正在打开快捷指令，完成后请到 Numbers 确认。";
+  };
+  document.querySelector("#editResult").onclick = () => {
+    shortcutResult = null;
+    saveShortcutDraft();
+    renderReview();
+    document.querySelector("#scorePanel").scrollIntoView({block:"start"});
+  };
+  document.querySelector("#finishResult").onclick = () => {
+    shortcutResult = null;
+    learnerId = "";
+    drafts.clear();
+    saveShortcutDraft();
+    renderReview();
+    document.querySelector("#learnerName").focus();
+  };
 }
 async function start() {
   app.innerHTML=hero("学习验收","正在加载验收数据…");
@@ -328,6 +436,16 @@ async function start() {
       learnerId = "";
     }
     data = loaded;
+    if (shortcutMode) {
+      const saved = loadShortcutDraft();
+      if (saved && moduleOf(saved.moduleId) && Array.isArray(saved.drafts)) {
+        learnerId = saved.learnerId;
+        data.reviewer = saved.reviewer;
+        moduleId = saved.moduleId;
+        saved.drafts.forEach(([key,value]) => drafts.set(key,value));
+        shortcutResult = saved.result;
+      }
+    }
     render();
   }
   catch(error) {
