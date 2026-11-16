@@ -43,8 +43,7 @@ const feishu = document.documentElement.dataset.mode === "feishu";
 const shortcutMode = document.documentElement.dataset.mode === "shortcut";
 const shortcutParams = new URLSearchParams(location.search);
 const shortcutName = shortcutParams.get("shortcut") || "QB 学习验收";
-// Set this to {version: 2, url: "..."} once the new iCloud import link is ready.
-const shortcutRelease = null;
+const shortcutRelease = {version: 2, url: "https://www.icloud.com/shortcuts/6c5e3e03dab841b19a6ca15b3cacb036"};
 const signOut = document.querySelector("#signOut");
 const demoKey = "qb-validation-offline-v1";
 const sample = {admin:true,reviewer:"演示导师",learners:[{id:"sample-1",name:"示例同事 A"},{id:"sample-2",name:"示例同事 B"}],reviews:[
