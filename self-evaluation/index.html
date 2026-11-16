@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f5f7">
+<title>QB 新同事自评</title>
+<style>
+:root{color-scheme:light;--ink:#1d1d1f;--muted:#55555a;--mac-blue:#007aff;--blue-text:#0066cc;--blue-button:#0067d8;--blue-tint:#edf5ff;--line:#dedee3;--white:#fff;--paper:#f5f5f7;--radius:22px;accent-color:var(--mac-blue);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--paper);line-height:1.55}button,textarea,select,input{font:inherit}button{cursor:pointer}button:disabled{cursor:default;opacity:.52}button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--mac-blue);outline-offset:3px}button{color:inherit}a{color:inherit}
+.shell{max-width:1152px;margin:auto;padding:0 32px}.top{background:#fff;border-bottom:1px solid var(--line)}.bar{display:flex;min-height:72px;justify-content:space-between;align-items:center;gap:20px}.brand{display:flex;gap:11px;align-items:center;font-weight:750;white-space:nowrap}.mark{background:var(--blue-tint);color:var(--blue-text);display:grid;place-items:center;width:36px;height:36px;border-radius:11px;font-size:13px;letter-spacing:.025em}.tabs{display:flex;gap:4px;background:var(--paper);padding:4px;border-radius:12px}.tab{border:0;background:transparent;padding:8px 15px;border-radius:8px;white-space:nowrap;font-size:14px}.tab[aria-current="page"]{background:#fff;color:var(--blue-text);font-weight:700;box-shadow:0 1px 4px #00000014}.account{font-size:13px;color:var(--muted);text-align:right;max-width:205px;overflow-wrap:anywhere}.account:empty{display:none}
+main{padding-top:36px!important;padding-bottom:60px!important}.hero{background:var(--white);border:1px solid var(--line);border-radius:27px;padding:36px 38px;display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:190px}.hero h1{margin:0 0 7px;font-size:clamp(32px,5vw,47px);letter-spacing:-.055em;line-height:1.16}.hero p{margin:0;color:var(--muted);font-size:15px}.hero-tags{display:flex;gap:9px;flex-wrap:wrap}.hero-tags span{color:var(--blue-text);background:var(--blue-tint);padding:8px 12px;font-weight:650;border-radius:99px;font-size:13px;white-space:nowrap}
+h2{font-size:22px;letter-spacing:-.023em;margin:0 0 14px}h3{font-size:17px;margin:0}.section{margin-top:28px}.sub{color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card,.pane{background:#fff;border:1px solid var(--line);border-radius:var(--radius)}.pane{padding:22px}.module{padding:17px 18px;text-align:left;width:100%;min-height:103px;display:flex;align-items:flex-start;gap:13px;transition:border-color .15s,background .15s}.module:hover{border-color:var(--mac-blue)}.module[aria-pressed="true"]{background:var(--blue-tint);border:1px solid var(--mac-blue);box-shadow:inset 0 0 0 1px var(--mac-blue)}.module strong{display:block;font-size:18px;word-break:break-word}.module .arrow{margin-left:auto;color:var(--muted);font-size:19px}.token{background:var(--blue-tint);color:var(--blue-text);border-radius:11px;display:grid;place-items:center;flex:none;width:34px;height:34px;font:700 13px system-ui}.module[aria-pressed="true"] strong,.module[aria-pressed="true"] .arrow{color:var(--blue-text)}.module[aria-pressed="true"] .token{background:var(--blue-button);color:var(--white)}.form-head{display:flex;gap:16px;align-items:end;justify-content:space-between;flex-wrap:wrap}.form-head h2{margin:0;color:var(--blue-text)}.form-head label{min-width:min(100%,240px)}
+label,.label{display:block;font-size:14px;font-weight:650}select,input,textarea{display:block;width:100%;min-width:0;margin-top:6px;border:1px solid #919197;border-radius:11px;background:#fff;padding:10px 12px;color:var(--ink);font-size:16px}textarea{resize:vertical;min-height:88px}
+.criteria{display:grid;gap:10px;margin:17px 0;color:var(--muted);padding-left:1.25em;font-size:14px}.criteria li::marker{color:var(--mac-blue)}.item{border:1px solid var(--line);border-radius:17px;padding:17px;margin:12px 0}.item-title{display:flex;align-items:center;gap:11px}.item-title h3{color:var(--blue-text)}.ratings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.rating{border:1px solid var(--line);background:#f5f5f7;border-radius:10px;min-height:47px;padding:6px 3px;font-size:13px}.rating[aria-pressed="true"]{background:var(--blue-tint);border-color:var(--mac-blue);color:var(--blue-text);font-weight:750}.rating span{display:block;font-size:11px}.actions{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:18px;flex-wrap:wrap}.primary,.secondary{border:1px solid transparent;border-radius:11px;font-weight:700;padding:10px 16px}.primary{background:var(--blue-button);color:var(--white);border-radius:999px}.primary:hover:enabled{background:#005bbf}.secondary{background:#fff;color:var(--blue-text);border-color:#a5b5c9}.secondary:hover{background:var(--blue-tint)}.notice{display:block;margin-top:13px;color:var(--muted);font-size:14px}.notice:empty{display:none}.error{color:#a62820}.notice a,#progress{color:var(--blue-text);font-weight:700}#progress{font-variant-numeric:tabular-nums}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:18px 0}.stat{padding:14px;border:1px solid var(--line);border-radius:13px;background:#f5f5f7;font-size:13px;color:var(--muted)}.stat b{font-size:25px;color:var(--blue-text);display:block;font-variant-numeric:tabular-nums}.dashboard-grid{display:grid;grid-template-columns:minmax(235px,.7fr) minmax(0,1.8fr);gap:15px;align-items:start}.roster{display:grid;gap:7px;margin-top:14px}.person{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0;width:100%;background:#f5f5f7;text-align:left;border:1px solid transparent;border-radius:10px;padding:10px}.person[aria-pressed="true"]{border-color:var(--mac-blue);background:var(--blue-tint)}.person[aria-pressed="true"] b{color:var(--blue-text)}.person b,.muteline{overflow-wrap:anywhere}.person .sub{white-space:nowrap}.person:first-child{margin-top:0}
+details{border:1px solid var(--line);border-radius:13px;margin:8px 0;background:#fff}summary{cursor:pointer;list-style:none;padding:13px;display:flex;align-items:center;justify-content:space-between;gap:8px}summary::-webkit-details-marker{display:none}summary::after{content:"＋";color:var(--muted);margin-left:2px}details[open]>summary::after{content:"−"}summary .push{margin-left:auto}.detail{padding:0 13px 13px}.pill{display:inline-block;padding:4px 8px;background:#f0f0f3;border-radius:99px;color:#48484e;font-size:12px;white-space:nowrap}.pill.good{background:#e8f5eb;color:#235b34}.pill.help{background:#fff1dc;color:#704702}.result-line{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding:8px 0;font-size:14px}.note{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;margin:7px 0}.meta{color:var(--muted);font-size:13px;overflow-wrap:anywhere}.history{margin-top:13px}.history article{border-top:1px solid var(--line);padding:10px 0}.sample{display:inline-block;margin-bottom:16px;border-radius:8px;padding:5px 9px;background:#fff4d9;color:#603d09;font-size:13px}.empty{padding:15px 0;color:var(--muted);font-size:14px}.inline-form{display:flex;align-items:end;gap:8px;margin-top:12px}.inline-form label{flex:1;min-width:0}.visually-hidden{position:absolute;clip:rect(0,0,0,0);clip-path:inset(50%);width:1px;height:1px;overflow:hidden;white-space:nowrap}
+@media(max-width:740px){.shell{padding:0 19px}.bar{gap:8px;min-height:64px}.account{display:none}.hero{padding:24px;min-height:0;align-items:flex-start;flex-direction:column;gap:17px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}main{padding-top:20px!important}.dashboard-grid{grid-template-columns:1fr}.pane{padding:16px}.token{width:28px;height:28px}.module{padding:13px 11px;gap:8px;min-height:87px}.module strong{font-size:15px}.module .arrow{display:none}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.item{padding:12px}.tab{padding:7px 10px}.criteria{margin-top:12px}.section{margin-top:22px}}
+@media(max-width:380px){.shell{padding:0 13px}.brand{gap:6px;font-size:14px}.mark{width:30px;height:30px}.module .sub{font-size:11px}summary{flex-wrap:wrap}.rating{font-size:12px}.hero-tags span{padding:5px 8px}}
+button,a.primary{touch-action:manipulation}
+#returnPanel .actions{justify-content:flex-start}
+#returnPanel a.primary{text-decoration:none;text-align:center}
+[hidden]{display:none!important}.hero{min-height:160px}.hero h1{letter-spacing:-.04em}
+.page-label{color:var(--blue-text);font-weight:700;font-size:14px}
+.scale{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:12px 0 2px}
+.scale div{background:var(--paper);border-radius:12px;padding:12px;font-size:14px}
+.scale dt{font-weight:700;color:var(--blue-text)}.scale dd{margin:5px 0 0;color:var(--muted)}
+.result-row{display:grid;grid-template-columns:1fr auto;gap:12px;border-top:1px solid var(--line);padding:9px 0;font-size:14px}
+#returnPanel .actions{gap:12px}#returnPanel .primary{text-align:center}
+#resultTitle:focus{outline:none}.section{scroll-margin-top:12px}
+@media(max-width:540px){.scale{grid-template-columns:1fr;gap:7px}.scale div{padding:9px 11px}.scale dd{margin-top:2px}.form-head label{width:100%}.module .token{display:none}.module strong{overflow-wrap:anywhere}.hero h1{font-size:34px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="shell bar">
+  <div class="brand"><span class="mark" aria-hidden="true">QB</span>FWE 培训</div>
+  <span class="page-label">新同事自评</span>
+</div></header>
+<main class="shell">
+  <section class="hero"><div>
+    <h1>新同事自评</h1>
+    <p>选择你的岗位，对照可观察行为给自己评分，记录想继续练习的地方。</p>
+  </div></section>
+  <div id="app"></div>
+</main>
+<script>
+"use strict";
+const catalog = [
+  {
+    "id": 1,
+    "name": "PZOP/Demo",
+    "area": "现场演示",
+    "items": [
+      [
+        "现场演示与硬件准备",
+        "熟练完成 Mic 的配对、调试与规范佩戴。",
+        "遵循 Live Demo 标准流程与互动规范，高质量完成现场产品演示。",
+        "运用 Show Feature，结合真实场景展示产品特性与实际价值。"
+      ],
+      [
+        "报价查询与队列管理",
+        "运用价格 App 提供产品报价与 Trade In 折抵换购预估。",
+        "准确创建 ISR，备注顾客核心需求、意向产品及沟通背景。"
+      ],
+      [
+        "商务探寻与一对多能力",
+        "识别潜在企业客户，主动探询并通过 Concierge 录入高质量 Business Leads。",
+        "统筹现场状况，在高峰期高效开展一对多接待。"
+      ]
+    ],
+    "display": "PZOP&PZOP/Demo"
+  },
+  {
+    "id": 2,
+    "name": "Ave/Watch",
+    "area": "个性化体验",
+    "items": [
+      [
+        "个性化连接与试戴体验",
+        "运用 C&P 工具探询顾客需求，定制个性化产品方案。",
+        "协助顾客试戴 AirPods，体验主动降噪、空间音频等核心功能。",
+        "查询 Apple Watch 定制表带库存并进行实物搭配演示。",
+        "能够开展一对多服务。"
+      ],
+      [
+        "专项政策与库存查询",
+        "准确解读 Apple Watch 相关的国家补贴与教育优惠购买规则及限制。",
+        "实时查询国家补贴专项库存。"
+      ],
+      [
+        "ISR 与商务",
+        "规范创建 ISR 并记录完整的顾客需求。",
+        "在接待中自然融入商务探询，通过系统建立 Business Leads。"
+      ]
+    ],
+    "display": "Avenue/Watch"
+  },
+  {
+    "id": 3,
+    "name": "Ave/Right",
+    "area": "配件与退货",
+    "items": [
+      [
+        "个性化配件方案与商务拓展",
+        "运用 C&P 工具挖掘顾客需求，提供契合的配件解决方案。",
+        "在配件服务中开展商务探询，规范建立 Business Leads。"
+      ],
+      [
+        "屏幕保护膜专业安装",
+        "按标准流程操作贴膜设备与工具，快速、精准、无尘地完成安装与品质检查。"
+      ],
+      [
+        "快速退货全流程处理",
+        "处理 Apple Trade In 折抵关联退货，包括银行转账退款。",
+        "处理 APU 订单退货。",
+        "处理 IDL 订单退货。",
+        "处理常规退货。"
+      ]
+    ],
+    "display": "Avenue/Right"
+  },
+  {
+    "id": 4,
+    "name": "Sales 1",
+    "area": "销售与结账",
+    "items": [
+      [
+        "完整解决方案",
+        "将 C&P 工具用于接待全流程。",
+        "结合顾客场景推荐原装与精选第三方配件，说明使用价值。",
+        "准确传递 AppleCare+ 核心保障权益与省心价值，主动推荐搭配购买。"
+      ],
+      [
+        "专项结账",
+        "完成国家补贴资格核验与专属结账。",
+        "完成教育优惠资格核验与专属结账。",
+        "独立、准确地完成店内 Apple Trade In 折抵换购。"
+      ],
+      [
+        "后续服务衔接",
+        "掌握 Bumblebee 流程。",
+        "根据数据迁移需求，使用 Concierge 为顾客创建 Setup 预约。"
+      ]
+    ]
+  },
+  {
+    "id": 5,
+    "name": "APU",
+    "area": "取货与搭配",
+    "items": [
+      [
+        "APU 订单流程",
+        "掌握 APU 取货政策，准确核验订单信息、取货凭证及有效身份证件。",
+        "熟练操作 APU 取货系统，确保订单正确完成。"
+      ],
+      [
+        "APU 搭配配件与 AC",
+        "运用 C&P 工具展开对话。",
+        "在取货过程中推荐配件搭配。",
+        "在取货过程中推荐 AppleCare 搭配。"
+      ],
+      [
+        "APU 退货",
+        "独立完成 APU 订单的现场退货流程。"
+      ]
+    ],
+    "display": "Apple Pick Up"
+  },
+  {
+    "id": 6,
+    "name": "Setup",
+    "area": "设备设置与迁移",
+    "items": [
+      [
+        "设备激活与账户配置",
+        "完成新设备开箱与基础激活配置。",
+        "掌握 Apple 账户的多种创建、验证与安全设置方式。",
+        "指导并协助顾客开通 Apple Watch 蜂窝网络。"
+      ],
+      [
+        "整机迁移与单导",
+        "熟练执行整机数据迁移及店内 Drop-in 操作。",
+        "掌握 iPhone 单独传输照片、通讯录及微信聊天记录的方式。",
+        "掌握安卓至 iPhone 传输照片、通讯录及微信聊天记录的方式。"
+      ],
+      [
+        "服务流程",
+        "高效开展一对多服务，合理安排多位顾客的操作节点与等待预期。",
+        "引导顾客确认资料，必要时协助抹除旧机数据。"
+      ]
+    ]
+  }
+];
+const shortcutName = "QB 新同事自评";
+const shortcutURL = "shortcuts://run-shortcut?name=" + encodeURIComponent(shortcutName);
+const levels = {
+  3:["熟练掌握","Talented","流程非常顺畅，能灵活应对顾客，可独立完成。"],
+  2:["基本达标","Skilled","掌握标准流程，能独立完成常规接待与操作，特殊情况需要少量提示。"],
+  1:["仍需辅导","Less Skilled","知识或操作还不熟练，容易卡住或遗漏关键步骤，需要导师继续陪同跟岗。"]
+};
+const stateKey = "qb-fwe-self-evaluation-v1";
+const app = document.querySelector("#app");
+const esc = (value = "") => String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+const total = scores => scores.reduce((sum, score) => sum + score, 0);
+const status = scores => scores.includes(1) ? "需针对性辅导" : scores.every(score => score === 3) ? "优秀通关" : "合格通关";
+const role = () => catalog.find(item => item.id === state.roleId);
+const makeDraft = () => ({scores:[0,0,0],note:"",payload:null});
+const blank = () => ({roleId:1,learner:"",drafts:{},showResult:false});
+const state = restore();
+const draft = () => state.drafts[state.roleId] ??= makeDraft();
+
+function restore() {
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(stateKey));
+    if (saved && catalog.some(item => item.id === saved.roleId) && typeof saved.learner === "string" && saved.drafts) return saved;
+  } catch {}
+  return blank();
+}
+
+function persist() {
+  try { sessionStorage.setItem(stateKey,JSON.stringify(state)); } catch {}
+}
+
+function notice(text, error = false) {
+  const output = document.querySelector("#notice");
+  output.textContent = text;
+  output.classList.toggle("error",error);
+}
+
+function renderForm() {
+  const selected = role();
+  const current = draft();
+  app.innerHTML = `<section class="section"><h2>选择岗位</h2><div class="grid">${catalog.map(item =>
+    `<button type="button" class="card module" data-role="${item.id}" aria-pressed="${item.id === selected.id}">
+      <span class="token" aria-hidden="true">${String(item.id).padStart(2,"0")}</span>
+      <span><strong>${esc(item.display || item.name)}</strong><span class="sub">${esc(item.area)}</span></span>
+    </button>`).join("")}</div></section>
+    <section class="section pane" id="scorePanel"><form id="assessment" novalidate>
+      <div class="form-head"><div><span class="sub">${esc(selected.area)}</span><h2>${esc(selected.display || selected.name)}</h2></div>
+        <label>你的姓名<input id="learner" autocomplete="name" maxlength="60" required value="${esc(state.learner)}" placeholder="输入姓名"></label>
+      </div>
+      <details><summary>查看评分标准</summary><div class="detail"><dl class="scale">${[3,2,1].map(n =>
+        `<div><dt>${n} 分 · ${levels[n][0]}</dt><dd>${levels[n][2]}</dd></div>`).join("")}</dl></div></details>
+      ${selected.items.map(([title,...criteria], i) => `<section class="item">
+        <div class="item-title"><span class="token">${selected.id}.${i+1}</span><h3 id="item-${i}">${esc(title)}</h3></div>
+        <ul class="criteria">${criteria.map(line => `<li>${esc(line)}</li>`).join("")}</ul>
+        <div class="ratings" role="group" aria-labelledby="item-${i}">${[3,2,1].map(n =>
+          `<button class="rating" type="button" data-item="${i}" data-score="${n}" aria-pressed="${current.scores[i] === n}">${levels[n][0]}<span>${n} 分 · ${levels[n][1]}</span></button>`).join("")}</div>
+      </section>`).join("")}
+      <label>自评备注 <span class="sub">可选</span><textarea id="note" maxlength="1000" placeholder="记录做得好的地方，或希望继续练习的内容">${esc(current.note)}</textarea></label>
+      <div class="actions"><span class="sub" id="progress" aria-live="polite"></span><button type="submit" class="primary">提交自评并写入 Numbers</button></div>
+      <output class="notice" id="notice" aria-live="polite"></output>
+    </form></section>`;
+  updateProgress();
+}
+
+function updateProgress() {
+  const scores = draft().scores;
+  const rated = scores.filter(Boolean).length;
+  document.querySelector("#progress").textContent = rated === scores.length ? total(scores) + " / 9 分" : "已评分 " + rated + " / 3 项";
+}
+
+function buildPayload(section, learner, scores, note, previous) {
+  const reviewer = learner + "（自评）";
+  const itemNames = section.items.map(item => item[0]);
+  const scoreTotal = total(scores);
+  const resultStatus = status(scores);
+  const values = [reviewer, learner, section.id, section.name,
+    itemNames[0], scores[0], itemNames[1], scores[1], itemNames[2], scores[2],
+    scoreTotal, resultStatus, note];
+  if (previous && values.every((value, i) => value === previous.row[i+2])) return previous;
+  const submissionId = crypto.randomUUID?.() || Array.from(crypto.getRandomValues(new Uint8Array(16)), byte => byte.toString(16).padStart(2,"0")).join("");
+  const submittedAt = new Date().toISOString();
+  return {version:1, submissionId, submittedAt, reviewer, learner,
+    moduleId:section.id, moduleName:section.name, itemNames, scores:[...scores],
+    total:scoreTotal, status:resultStatus, note, row:[submissionId, submittedAt, ...values]};
+}
+
+function renderResult(payload) {
+  const encoded = JSON.stringify(payload);
+  const direct = shortcutURL + "&input=text&text=" + encodeURIComponent(encoded);
+  app.innerHTML = `<section class="section pane" id="returnPanel">
+    <h2 id="resultTitle" tabindex="-1">自评结果</h2>
+    <p>${esc(payload.learner)} · ${esc(role().display || payload.moduleName)}</p>
+    <p><strong>${payload.total} / 9 分</strong></p>
+    ${payload.itemNames.map((item, i) => `<div class="result-row"><span>${esc(item)}</span><strong>${payload.scores[i]} 分 · ${levels[payload.scores[i]][0]}</strong></div>`).join("")}
+    ${payload.note ? `<p class="note"><strong>自评备注</strong> ${esc(payload.note)}</p>` : ""}
+    <div class="actions"><a class="primary" href="${esc(direct)}" id="writeResult">打开快捷指令写入 Numbers</a></div>
+    <output class="notice" id="notice" aria-live="polite">由「${esc(shortcutName)}」快捷指令写入自评数据库。请到 Numbers 确认是否新增了记录。</output>
+    <p class="meta">提交编号 ${esc(payload.submissionId)}</p>
+    <details><summary>快捷指令安装与剪贴板备用方式</summary><div class="detail">
+      <p class="sub">首次使用请先安装「${esc(shortcutName)}」快捷指令。如果直接跳转失败，复制结果代码后再从剪贴板写入。</p>
+      <label>结果代码<textarea id="resultCode" readonly rows="4"></textarea></label>
+      <div class="actions"><button type="button" class="secondary" id="copyResult">复制结果代码</button><a class="primary" href="${esc(shortcutURL + "&input=clipboard")}">从剪贴板写入 Numbers</a></div>
+      <output class="notice" id="copyNotice" aria-live="polite"></output>
+    </div></details>
+    <div class="actions"><button class="secondary" type="button" id="editResult">返回修改</button><button class="secondary" type="button" id="finishResult">已写入，继续自评</button></div>
+  </section>`;
+  document.querySelector("#resultCode").value = encoded;
+  document.querySelector("#writeResult").onclick = () => notice("正在打开快捷指令。重复写入前请用提交编号确认是否已有记录。");
+}
+
+app.addEventListener("input", event => {
+  if (event.target.id === "learner") state.learner = event.target.value;
+  if (event.target.id === "note") draft().note = event.target.value;
+  persist();
+});
+
+app.addEventListener("click", async event => {
+  const button = event.target.closest("button");
+  if (!button) return;
+  if (button.dataset.role) {
+    state.roleId = Number(button.dataset.role);
+    persist();
+    renderForm();
+    app.querySelector(`[data-role="${state.roleId}"]`).focus({preventScroll:true});
+  } else if (button.dataset.score) {
+    draft().scores[Number(button.dataset.item)] = Number(button.dataset.score);
+    persist();
+    button.parentElement.querySelectorAll("button").forEach(item => item.setAttribute("aria-pressed",item === button));
+    updateProgress();
+    notice("");
+  } else if (button.id === "editResult" || button.id === "finishResult") {
+    if (button.id === "finishResult") delete state.drafts[state.roleId];
+    state.showResult = false;
+    persist();
+    renderForm();
+    if (button.id === "editResult") document.querySelector("#learner").focus();
+    else app.querySelector(`[data-role="${state.roleId}"]`).focus();
+  } else if (button.id === "copyResult") {
+    const code = document.querySelector("#resultCode");
+    const feedback = document.querySelector("#copyNotice");
+    let copied = false;
+    try {
+      await navigator.clipboard.writeText(code.value);
+      copied = true;
+    } catch {
+      code.focus();
+      code.select();
+      code.setSelectionRange(0,code.value.length);
+      try { copied = document.execCommand("copy"); } catch {}
+    }
+    feedback.textContent = copied ? "已复制。现在可以从剪贴板写入 Numbers。" : "请手动复制选中的结果代码，再从剪贴板写入。";
+  }
+});
+
+app.addEventListener("submit", event => {
+  event.preventDefault();
+  const nameField = document.querySelector("#learner");
+  const learner = nameField.value.trim();
+  const current = draft();
+  const missing = current.scores.findIndex(score => score === 0);
+  if (!learner || missing >= 0) {
+    notice(!learner ? "请填写你的姓名。" : "请为第 " + (missing+1) + " 项评分。",true);
+    const field = !learner ? nameField : app.querySelector(`[data-item="${missing}"]`);
+    field.focus();
+    return;
+  }
+  current.note = document.querySelector("#note").value;
+  current.payload = buildPayload(role(),learner,current.scores,current.note.trim(),current.payload);
+  state.showResult = true;
+  persist();
+  renderResult(current.payload);
+  document.querySelector("#resultTitle").focus();
+  // Keep the app handoff inside the submit gesture for Safari and Chrome.
+  document.querySelector("#writeResult").click();
+});
+
+if (state.showResult && draft().payload) renderResult(draft().payload);
+else renderForm();
+</script>
+</body>
+</html>
